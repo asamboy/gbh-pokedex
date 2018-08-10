@@ -27,8 +27,8 @@ class PkmnForm extends Component {
     this.state = {
       name: '',
       type: '',
-      pokemons: [],
       caught: false,
+      pokemons: [],
     };
   }
 
@@ -63,6 +63,18 @@ class PkmnForm extends Component {
     this.setState({
       type: event.target.value,
     })
+  }
+
+  editPokemon = (pokemon) => {
+    let index = this.state.pokemons.findIndex(p => p.name === pokemon.name);
+    let pokemons = this.state.pokemons
+    let newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
+    this.setState({
+      name: pokemon.name,
+      type: pokemon.type,
+      caught: pokemon.caught,
+      pokemons: newList,
+    });
   }
 
   render() {
@@ -115,7 +127,10 @@ class PkmnForm extends Component {
           </div>
           
           <div>
-            <PkmnList pokemons={this.state.pokemons} />
+            <PkmnList
+              pokemons={this.state.pokemons}
+              edit={this.editPokemon}
+            />
           </div>
         </div>
     );
