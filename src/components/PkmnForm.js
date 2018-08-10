@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PkmnList from "./PkmnList";
+import PkmnTable from "./PkmnTable";
 
 class PkmnForm extends Component {
 
@@ -19,56 +19,51 @@ class PkmnForm extends Component {
     'Psychic',
     'Rock',
     'Water'
-    ]
+  ]
 
   constructor(props) {
     super(props);
-
     this.state = {
-      name: '',
-      nickname: '',
-      type: '',
-      location: '',
-      photo:'',
-      weight:'',
-      age:'',
-      description:'',
-      captured: false,
+      pokemon: {
+        name: '',
+        nickname: '',
+        type: '',
+        location: '',
+        photo:'',
+        weight:'',
+        age:'',
+        description:'',
+        captured: false,
+      },
       pokemons: [],
     };
   }
 
-  resetState() {
+  resetPokemon() {
     return {
-      name: '',
-      nickname: '',
-      type: '',
-      location: '',
-      photo:'',
-      weight:'',
-      age:'',
-      description:'',
-      captured: false,
+      pokemon: {
+        name: '',
+        nickname: '',
+        type: '',
+        location: '',
+        photo:'',
+        weight:'',
+        age:'',
+        description:'',
+        captured: false,
+      }
     };
   }
 
   handleSubmit = (event) => {
-    let pokemon = {};
-    let values = Array.from(event.target);
-
-    values.forEach(function(v){
-      if (v.name !== '') {
-        pokemon[v.name] = v.value;
-      }
-    });
-
-    this.setState(this.resetState());
+    const pokemon = this.state.pokemon;
 
     this.setState({
       pokemons: this.state.pokemons.concat(pokemon)
     });
-    
-    event.preventDefault()
+
+    this.setState(this.resetPokemon());
+    event.preventDefault();
   }
 
   handleChange = (event) => {
@@ -76,30 +71,30 @@ class PkmnForm extends Component {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    this.setState({
-      [name]: value
-    });
-  }
+    let pokemon = {};
+    pokemon[name] = value;
 
-  handleTypeChange = (event) => {
-    this.setState({
-      type: event.target.value,
-    })
+    this.setState(prevState => ({
+      pokemon: {
+        ...prevState.pokemon,
+        [name]: value
+      }
+    }));
   }
 
   editPokemon = (pokemon) => {
     let index = this.state.pokemons.findIndex(p => p.name === pokemon.name);
     let pokemons = this.state.pokemons
     let newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
+    
     this.setState({
-      name: pokemon.name,
-      type: pokemon.type,
-      captured: pokemon.captured,
+      pokemon,
       pokemons: newList,
     });
   }
 
   render() {
+    const {pokemon} = this.state;
     return (
         <div>
           <div>
@@ -111,15 +106,15 @@ class PkmnForm extends Component {
                   placeholder="Name"
                   name="name"
                   onChange={this.handleChange}
-                  value={this.state.name} 
+                  value={pokemon.name} 
                 />
               </div>
               <div>
                 <select 
                   name="type"
                   required
-                  value={this.state.type}
                   onChange={this.handleChange}
+                  value={pokemon.type}
                 >
                   <option value='' disabled>Type</option>
                   {PkmnForm.types.map(
@@ -140,7 +135,7 @@ class PkmnForm extends Component {
                   placeholder="Nickname"
                   name="nickname"
                   onChange={this.handleChange}
-                  value={this.state.nickname} 
+                  value={pokemon.nickname} 
                 />
               </div>
               <div>
@@ -149,7 +144,7 @@ class PkmnForm extends Component {
                   placeholder="Location"
                   name="location"
                   onChange={this.handleChange}
-                  value={this.state.location} 
+                  value={pokemon.location} 
                 />
               </div>
               <div>
@@ -158,25 +153,27 @@ class PkmnForm extends Component {
                   placeholder="Photo"
                   name="photo"
                   onChange={this.handleChange}
-                  value={this.state.photo} 
+                  value={pokemon.photo} 
                 />
               </div>
               <div>
                 <input 
+                  type="number"
                   required
                   placeholder="Weight"
                   name="weight"
                   onChange={this.handleChange}
-                  value={this.state.weight} 
+                  value={pokemon.weight} 
                 />
               </div>
               <div>
                 <input 
+                  type="number"
                   required
                   placeholder="Age"
                   name="age"
                   onChange={this.handleChange}
-                  value={this.state.age} 
+                  value={pokemon.age} 
                 />
               </div>
               <div>
@@ -185,7 +182,7 @@ class PkmnForm extends Component {
                   <input
                     name="captured"
                     type="checkbox"
-                    checked={this.state.captured}
+                    checked={pokemon.captured}
                     onChange={this.handleChange}
                   />
                 </label>
@@ -197,7 +194,7 @@ class PkmnForm extends Component {
           </div>
           
           <div>
-            <PkmnList
+            <PkmnTable
               pokemons={this.state.pokemons}
               edit={this.editPokemon}
             />
