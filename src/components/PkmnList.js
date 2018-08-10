@@ -16,14 +16,13 @@ class PkmnList extends Component {
               onClick={() => this.edit(pokemon)}
               key={pokemon.name}
             >
-              {pokemon.name} – {pokemon.type} {pokemon.caught ? '(caught)' : ''}
+              {pokemon.name} – {pokemon.type} {pokemon.captured ? '(captured)' : ''}
             </li>
   }
 
   render() {
     var pokemons = this.props.pokemons;
     var listItems = pokemons.map(p => this.addPokemon(p));
-    // var listItems = pokemons.map(p => <ListItem key={p.name} pokemon={p} />);
     return (
       <ul>
         {listItems}

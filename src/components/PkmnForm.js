@@ -26,27 +26,49 @@ class PkmnForm extends Component {
 
     this.state = {
       name: '',
+      nickname: '',
       type: '',
-      caught: false,
+      location: '',
+      photo:'',
+      weight:'',
+      age:'',
+      description:'',
+      captured: false,
       pokemons: [],
     };
   }
 
-  handleSubmit = (event) => {
-    var pokemon = {
-      name: this.state.name,
-      type: this.state.type,
-      caught: this.state.caught
+  resetState() {
+    return {
+      name: '',
+      nickname: '',
+      type: '',
+      location: '',
+      photo:'',
+      weight:'',
+      age:'',
+      description:'',
+      captured: false,
     };
+  }
+
+  handleSubmit = (event) => {
+    let pokemon = {};
+    let values = Array.from(event.target);
+
+    values.forEach(function(v){
+      if (v.name !== '') {
+        pokemon[v.name] = v.value;
+      }
+    });
+
+    this.setState(this.resetState());
 
     this.setState({
-      name: '',
-      type: '',
-      caught: false,
       pokemons: this.state.pokemons.concat(pokemon)
     });
+    
     event.preventDefault()
-
   }
 
   handleChange = (event) => {
@@ -72,7 +94,7 @@ class PkmnForm extends Component {
     this.setState({
       name: pokemon.name,
       type: pokemon.type,
-      caught: pokemon.caught,
+      captured: pokemon.captured,
       pokemons: newList,
     });
   }
@@ -82,47 +104,95 @@ class PkmnForm extends Component {
         <div>
           <div>
             <h1>Register a Pokémon</h1>
-    
-            <form onSubmit={this.handleSubmit}>
-              
-              <input 
-                required
-                placeholder=" Name"
-                name="name"
-                onChange={this.handleChange}
-                value={this.state.name} 
-              />
-              <br />
-              <select 
-                name="type"
-                required
-                value={this.state.type}
-                onChange={this.handleChange}
-              >
-                <option value='' disabled>Type</option>
-                {PkmnForm.types.map(
-                  optionValue => (
-                    <option
-                      key={optionValue}
-                      value={optionValue}
-                    >
-                      {optionValue}
-                    </option>
-                  )
-                )}
-              </select>
-              <br />
-              <label>
-                Caught
-                <input
-                  name="caught"
-                  type="checkbox"
-                  checked={this.state.caught}
+            <form onSubmit={this.handleSubmit}> 
+              <div>
+                <input 
+                  required
+                  placeholder="Name"
+                  name="name"
                   onChange={this.handleChange}
+                  value={this.state.name} 
                 />
-              </label>
-              <br />
-              <button type="submit">Add Pokemon</button> 
+              </div>
+              <div>
+                <select 
+                  name="type"
+                  required
+                  value={this.state.type}
+                  onChange={this.handleChange}
+                >
+                  <option value='' disabled>Type</option>
+                  {PkmnForm.types.map(
+                    optionValue => (
+                      <option
+                        key={optionValue}
+                        value={optionValue}
+                      >
+                        {optionValue}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+              <div>
+                <input 
+                  required
+                  placeholder="Nickname"
+                  name="nickname"
+                  onChange={this.handleChange}
+                  value={this.state.nickname} 
+                />
+              </div>
+              <div>
+                <input 
+                  required
+                  placeholder="Location"
+                  name="location"
+                  onChange={this.handleChange}
+                  value={this.state.location} 
+                />
+              </div>
+              <div>
+                <input 
+                  required
+                  placeholder="Photo"
+                  name="photo"
+                  onChange={this.handleChange}
+                  value={this.state.photo} 
+                />
+              </div>
+              <div>
+                <input 
+                  required
+                  placeholder="Weight"
+                  name="weight"
+                  onChange={this.handleChange}
+                  value={this.state.weight} 
+                />
+              </div>
+              <div>
+                <input 
+                  required
+                  placeholder="Age"
+                  name="age"
+                  onChange={this.handleChange}
+                  value={this.state.age} 
+                />
+              </div>
+              <div>
+                <label>
+                  captured
+                  <input
+                    name="captured"
+                    type="checkbox"
+                    checked={this.state.captured}
+                    onChange={this.handleChange}
+                  />
+                </label>
+              </div>
+              <div>
+                <button type="submit">Add Pokemon</button> 
+              </div>
             </form>
           </div>
           
