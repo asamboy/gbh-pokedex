@@ -96,23 +96,28 @@ class PkmnForm extends Component {
   render() {
     const {pokemon} = this.state;
     return (
-        <div>
-          <div>
-            <h1>Register a Pokémon</h1>
+      <div className="container">
+        <div className="row form-wrapper">
+          <div className="col-md-4">
+            <h2>Register a Pokémon</h2>
+            <hr />
             <form onSubmit={this.handleSubmit}> 
-              <div>
-                <input 
+              <div className="form-group">
+                <input
+                  className="form-control" 
                   required
                   placeholder="Name"
                   name="name"
+                  type="text"
                   onChange={this.handleChange}
                   value={pokemon.name} 
                 />
               </div>
-              <div>
-                <select 
+              <div className="form-group">
+                <select className="form-control"
                   name="type"
                   required
+                  type="text"
                   onChange={this.handleChange}
                   value={pokemon.type}
                 >
@@ -129,35 +134,42 @@ class PkmnForm extends Component {
                   )}
                 </select>
               </div>
-              <div>
-                <input 
+              <div className="form-group">
+                <input
+                  className="form-control" 
                   required
                   placeholder="Nickname"
                   name="nickname"
+                  type="text"
                   onChange={this.handleChange}
                   value={pokemon.nickname} 
                 />
               </div>
-              <div>
-                <input 
+              <div className="form-group">
+                <input
+                  className="form-control" 
                   required
                   placeholder="Location"
                   name="location"
+                  type="text"
                   onChange={this.handleChange}
                   value={pokemon.location} 
                 />
               </div>
-              <div>
-                <input 
+              <div className="form-group">
+                <input
+                  className="form-control" 
                   required
                   placeholder="Photo"
                   name="photo"
+                  type="text"
                   onChange={this.handleChange}
                   value={pokemon.photo} 
                 />
               </div>
-              <div>
-                <input 
+              <div className="form-group">
+                <input
+                  className="form-control" 
                   type="number"
                   required
                   placeholder="Weight"
@@ -166,8 +178,9 @@ class PkmnForm extends Component {
                   value={pokemon.weight} 
                 />
               </div>
-              <div>
-                <input 
+              <div className="form-group">
+                <input
+                  className="form-control" 
                   type="number"
                   required
                   placeholder="Age"
@@ -176,30 +189,33 @@ class PkmnForm extends Component {
                   value={pokemon.age} 
                 />
               </div>
-              <div>
-                <label>
-                  captured
-                  <input
-                    name="captured"
-                    type="checkbox"
-                    checked={pokemon.captured}
-                    onChange={this.handleChange}
-                  />
+              <div className="form-group">
+                
+                <input
+                  id="captured"
+                  className="form-check-label"
+                  name="captured"
+                  type="checkbox"
+                  checked={pokemon.captured}
+                  onChange={this.handleChange}
+                /> 
+                <label for="captured"> Captured
                 </label>
               </div>
-              <div>
-                <button type="submit">Add Pokemon</button> 
+              <div className="col-md-12 text-center">
+                <button type="submit" className="btn btn-primary">Add Pokémon</button> 
               </div>
             </form>
           </div>
           
-          <div>
+          <div className="col-md-8">
             <PkmnTable
               pokemons={this.state.pokemons}
               edit={this.editPokemon}
             />
           </div>
         </div>
+      </div>
     );
   }
 }
