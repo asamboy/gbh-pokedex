@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import PkmnTable from "./PkmnTable";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'
 
 class PkmnForm extends Component {
 
@@ -36,6 +38,7 @@ class PkmnForm extends Component {
         captured: false,
       },
       pokemons: [],
+      buttonAction: 'Add Pokémon',
     };
   }
 
@@ -83,14 +86,45 @@ class PkmnForm extends Component {
   }
 
   editPokemon = (pokemon) => {
-    let index = this.state.pokemons.findIndex(p => p.name === pokemon.name);
-    let pokemons = this.state.pokemons
-    let newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
-    
+    confirmAlert({
+      title: 'Edit or remove  ' + pokemon.name + '?',
+      buttons: [
+        {
+          label: 'Edit',
+          onClick: () => this.edit(pokemon)
+        },
+        {
+          label: 'Delete',
+          onClick: () => this.delete(pokemon)
+        }
+      ]
+    })
+  };
+
+  edit = (pokemon) => {
+    let newList = this.getNewList(pokemon);
+
     this.setState({
       pokemon,
       pokemons: newList,
+      buttonAction: 'Save changes',
     });
+  }
+
+  delete = (pokemon) => {
+    let newList = this.getNewList(pokemon);
+    
+    this.setState({
+      pokemons: newList,
+      buttonAction: 'Add Pokémon',
+    });
+  }
+
+  getNewList = (pokemon) => {
+    let index = this.state.pokemons.findIndex(p => p.name === pokemon.name);
+    let pokemons = this.state.pokemons
+    let newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
+    return newList;
   }
 
   render() {
@@ -98,8 +132,8 @@ class PkmnForm extends Component {
     return (
       <div className="container">
         <div className="row form-wrapper">
-          <div className="col-md-4">
-            <h2>Register a Pokémon</h2>
+          <div className="col-lg-4">
+            <h1 className="text-center">Register a Pokémon</h1>
             <hr />
             <form onSubmit={this.handleSubmit}> 
               <div className="form-group">
@@ -171,6 +205,7 @@ class PkmnForm extends Component {
                 <input
                   className="form-control" 
                   type="number"
+                  min="0"
                   required
                   placeholder="Weight"
                   name="weight"
@@ -182,6 +217,7 @@ class PkmnForm extends Component {
                 <input
                   className="form-control" 
                   type="number"
+                  min="0"
                   required
                   placeholder="Age"
                   name="age"
@@ -189,8 +225,7 @@ class PkmnForm extends Component {
                   value={pokemon.age} 
                 />
               </div>
-              <div className="form-group">
-                
+              <div className="form-group text-center">
                 <input
                   id="captured"
                   className="form-check-label"
@@ -199,16 +234,16 @@ class PkmnForm extends Component {
                   checked={pokemon.captured}
                   onChange={this.handleChange}
                 /> 
-                <label for="captured"> Captured
+                <label htmlFor="captured"> Captured
                 </label>
               </div>
               <div className="col-md-12 text-center">
-                <button type="submit" className="btn btn-primary">Add Pokémon</button> 
+                <button type="submit" className="btn btn-primary">{this.state.buttonAction}</button> 
               </div>
             </form>
+            <hr className="d-lg-none d-xl-block" />
           </div>
-          
-          <div className="col-md-8">
+          <div className="col-lg-8">
             <PkmnTable
               pokemons={this.state.pokemons}
               edit={this.editPokemon}

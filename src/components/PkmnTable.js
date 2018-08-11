@@ -23,7 +23,7 @@ class PkmnTable extends Component {
               <td>{pokemon.photo}</td>
               <td>{pokemon.weight}</td>
               <td>{pokemon.age}</td>
-              <td>{pokemon.captured ? '✓' : ''}</td>
+              <td className="text-center">{pokemon.captured ? '✓' : ''}</td>
             </tr>
   }
 
@@ -31,25 +31,23 @@ class PkmnTable extends Component {
     var pokemons = this.props.pokemons;
     var tableItems = pokemons.map(p => this.addPokemon(p));
     return (
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Nickname</th>
-              <th>Location</th>
-              <th>Photo</th>
-              <th>Weight</th>
-              <th>Age</th>
-              <th>Captured</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableItems}
-          </tbody>
-        </table>
-      </div>
+      <table className="table table-striped table-responsive table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Nickname</th>
+            <th>Location</th>
+            <th>Photo</th>
+            <th>Weight</th>
+            <th>Age</th>
+            <th>Captured</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableItems}
+        </tbody>
+      </table>
     );
   }
 }

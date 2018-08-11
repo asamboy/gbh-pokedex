@@ -2,12 +2,8 @@ body {
   background-color:#dc3545;
 }
 
-table, th, td {
-  border: 1px solid black;
-}
-
-th, td {
-  padding: 5px;
+tr:hover {
+  cursor: pointer;
 }
 
 .btn-primary {
@@ -27,11 +23,6 @@ th, td {
   background: #f3f3f3; 
 }
 
-input::placeholder {
-  padding-left: 3px;
-  color: #495057;
-}
-
 .form-wrapper input:focus,
 .form-wrapper select:focus { 
   border-color: #dc3545;
@@ -46,3 +37,4 @@ input::placeholder {
   box-shadow: none;
   border: none;
 }
+
