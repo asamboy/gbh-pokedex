@@ -2,7 +2,7 @@ body {
   background-color:#dc3545;
 }
 
-tr:hover {
+tbody tr:hover {
   cursor: pointer;
 }
 
@@ -36,5 +36,9 @@ tr:hover {
 .form-wrapper input[type="checkbox"]:focus {
   box-shadow: none;
   border: none;
+}
+
+input:placeholder-shown {
+  text-transform: capitalize;
 }
 

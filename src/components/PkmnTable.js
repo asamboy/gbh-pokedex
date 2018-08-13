@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-class PkmnTable extends Component {
+class PkmnTable extends PureComponent {
 
-  constructor(props) {
-    super(props);
-    this.edit = this.edit.bind(this);
-  }
-
-  edit(pokemon) {
+  edit = (pokemon) => {
     this.props.edit(pokemon);
   }
 
@@ -28,10 +23,10 @@ class PkmnTable extends Component {
   }
 
   render() {
-    var pokemons = this.props.pokemons;
-    var tableItems = pokemons.map(p => this.addPokemon(p));
+    let pokemons = this.props.pokemons;
+    let tableItems = pokemons.map(p => this.addPokemon(p));
     return (
-      <table className="table table-striped table-responsive table-hover table-sm">
+      <table className="table table-striped table-responsive table-hover">
         <thead>
           <tr>
             <th>Name</th>

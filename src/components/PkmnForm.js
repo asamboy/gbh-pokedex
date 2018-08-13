@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PkmnTable from "./PkmnTable";
+import TextInput from "./TextInput";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
 
-class PkmnForm extends Component {
+class PkmnForm extends PureComponent {
 
   static types = [
     'Bug',
@@ -44,28 +45,26 @@ class PkmnForm extends Component {
 
   resetPokemon() {
     return {
-      pokemon: {
-        name: '',
-        nickname: '',
-        type: '',
-        location: '',
-        photo:'',
-        weight:'',
-        age:'',
-        description:'',
-        captured: false,
-      }
+      name: '',
+      nickname: '',
+      type: '',
+      location: '',
+      photo:'',
+      weight:'',
+      age:'',
+      description:'',
+      captured: false,
     };
   }
 
   handleSubmit = (event) => {
-    const pokemon = this.state.pokemon;
+    const pokemon = Object.assign({},this.state.pokemon);
+    const emptyPokemon = this.resetPokemon();
 
     this.setState({
+      pokemon: emptyPokemon,
       pokemons: this.state.pokemons.concat(pokemon)
     });
-
-    this.setState(this.resetPokemon());
     event.preventDefault();
   }
 
@@ -101,6 +100,7 @@ class PkmnForm extends Component {
     })
   };
 
+  // TODO don't remove from table/array while editing
   edit = (pokemon) => {
     let newList = this.getNewList(pokemon);
 
@@ -127,8 +127,33 @@ class PkmnForm extends Component {
     return newList;
   }
 
+  getInputFields = (key) => {
+    const notText = ['type','description','captured'];
+    const numeric = ['weight','age'];
+    let type = "text"
+
+    if (numeric.indexOf(({key}.key)) !== -1) {
+      type = "number";
+    }
+
+    if (notText.indexOf({key}.key) === -1) {
+      return <TextInput 
+              divClassName="form-group"
+              inputClassName="form-control" 
+              placeHolder={key}
+              inputName={key}
+              inputType={type}
+              handlechange={this.handleChange}
+              value={this.state.pokemon[key]}
+              key={key}
+            />
+    }
+  }
+
   render() {
     const {pokemon} = this.state;
+    let inputFields = Object.keys(pokemon).map((key) => this.getInputFields(key));
+
     return (
       <div className="container">
         <div className="row form-wrapper">
@@ -136,112 +161,13 @@ class PkmnForm extends Component {
             <h1 className="text-center">Register a Pokémon</h1>
             <hr />
             <form onSubmit={this.handleSubmit}> 
-              <div className="form-group">
-                <input
-                  className="form-control" 
-                  required
-                  placeholder="Name"
-                  name="name"
-                  type="text"
-                  onChange={this.handleChange}
-                  value={pokemon.name} 
-                />
-              </div>
-              <div className="form-group">
-                <select className="form-control"
-                  name="type"
-                  required
-                  type="text"
-                  onChange={this.handleChange}
-                  value={pokemon.type}
-                >
-                  <option value='' disabled>Type</option>
-                  {PkmnForm.types.map(
-                    optionValue => (
-                      <option
-                        key={optionValue}
-                        value={optionValue}
-                      >
-                        {optionValue}
-                      </option>
-                    )
-                  )}
-                </select>
-              </div>
-              <div className="form-group">
-                <input
-                  className="form-control" 
-                  required
-                  placeholder="Nickname"
-                  name="nickname"
-                  type="text"
-                  onChange={this.handleChange}
-                  value={pokemon.nickname} 
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  className="form-control" 
-                  required
-                  placeholder="Location"
-                  name="location"
-                  type="text"
-                  onChange={this.handleChange}
-                  value={pokemon.location} 
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  className="form-control" 
-                  required
-                  placeholder="Photo"
-                  name="photo"
-                  type="text"
-                  onChange={this.handleChange}
-                  value={pokemon.photo} 
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  className="form-control" 
-                  type="number"
-                  min="0"
-                  required
-                  placeholder="Weight"
-                  name="weight"
-                  onChange={this.handleChange}
-                  value={pokemon.weight} 
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  className="form-control" 
-                  type="number"
-                  min="0"
-                  required
-                  placeholder="Age"
-                  name="age"
-                  onChange={this.handleChange}
-                  value={pokemon.age} 
-                />
-              </div>
-              <div className="form-group text-center">
-                <input
-                  id="captured"
-                  className="form-check-label"
-                  name="captured"
-                  type="checkbox"
-                  checked={pokemon.captured}
-                  onChange={this.handleChange}
-                /> 
-                <label htmlFor="captured"> Captured
-                </label>
-              </div>
+              {inputFields}
+              
               <div className="col-md-12 text-center">
                 <button type="submit" className="btn btn-primary">{this.state.buttonAction}</button> 
               </div>
             </form>
-            <hr className="d-lg-none d-xl-block" />
+            <hr className="d-lg-none" />
           </div>
           <div className="col-lg-8">
             <PkmnTable
