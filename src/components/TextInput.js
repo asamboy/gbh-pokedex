@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 
 class TextInput extends PureComponent {
-
   handleChange = (event) => {
     this.props.handlechange(event);
   }

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 
 class PkmnTable extends PureComponent {
-
   select = (pokemon) => {
     this.props.select(pokemon);
   }
