@@ -6,6 +6,7 @@ class PkmnTable extends PureComponent {
     this.props.select(pokemon);
   }
 
+  // TODO load fields dinamically
   addPokemon(pokemon) {
     return <tr 
               onClick={() => this.select(pokemon)}

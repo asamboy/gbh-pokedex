@@ -40,7 +40,8 @@ class PkmnForm extends PureComponent {
         captured: false,
       },
       pokemons: [],
-      buttonAction: 'Add Pokémon',
+      buttonAction: "add",
+      selectedPokemon: {},
     };
   }
 
@@ -59,14 +60,46 @@ class PkmnForm extends PureComponent {
   }
 
   handleSubmit = (event) => {
-    const pokemon = Object.assign({},this.state.pokemon);
+    const action = this.state.buttonAction;
+    
+    if (action === "add") {
+      this.addPokemon();
+    } else if (action === "update") {
+      this.updatePokemon();
+    }
+    event.preventDefault();
+  }
+
+  addPokemon = () => { 
+    const pokemon = this.state.pokemon; 
     const emptyPokemon = this.resetPokemon();
+    const pokemons = this.state.pokemons;
+    let index = pokemons.findIndex(p => p.name === pokemon.name);
+
+    if (index === -1) { 
+      this.setState({
+        pokemons: pokemons.concat(pokemon),
+        pokemon: emptyPokemon,
+      });
+    } else {
+      alert(pokemon.name + " is already registered");
+    }
+  }
+
+  updatePokemon = () => {
+    const pokemon = this.state.pokemon; 
+    let pokemons = this.state.pokemons.slice(0);
+    const selected = this.state.selectedPokemon;
+    const emptyPokemon = this.resetPokemon();
+    let index = pokemons.findIndex(p => p.name === selected.name);
+    pokemons[index] = pokemon;
 
     this.setState({
+      pokemons,
       pokemon: emptyPokemon,
-      pokemons: this.state.pokemons.concat(pokemon)
+      selectedPokemon: emptyPokemon,
+      buttonAction: "add",
     });
-    event.preventDefault();
   }
 
   handleChange = (event) => {
@@ -86,6 +119,9 @@ class PkmnForm extends PureComponent {
   }
 
   selectPokemon = (pokemon) => {
+    this.setState({
+      selectedPokemon: pokemon
+    });
     confirmAlert({
       title: 'Edit or remove  ' + pokemon.name + '?',
       buttons: [
@@ -101,14 +137,10 @@ class PkmnForm extends PureComponent {
     })
   };
 
-  // TODO don't remove from table/array while editing
   edit = (pokemon) => {
-    let newList = this.getNewList(pokemon);
-
     this.setState({
       pokemon,
-      pokemons: newList,
-      buttonAction: 'Save changes',
+      buttonAction: "update",
     });
   }
 
@@ -117,13 +149,12 @@ class PkmnForm extends PureComponent {
     
     this.setState({
       pokemons: newList,
-      buttonAction: 'Add Pokémon',
     });
   }
 
   getNewList = (pokemon) => {
-    let index = this.state.pokemons.findIndex(p => p.name === pokemon.name);
     let pokemons = this.state.pokemons
+    let index = pokemons.findIndex(p => p.name === pokemon.name);
     let newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
     return newList;
   }
@@ -192,7 +223,7 @@ class PkmnForm extends PureComponent {
             <form onSubmit={this.handleSubmit}> 
               {inputFields}
               <div className="col-md-12 text-center">
-                <button type="submit" className="btn btn-primary">{this.state.buttonAction}</button> 
+                <button type="submit" className="btn btn-primary">{this.state.buttonAction === 'add' ? "Add Pokémon" : "Update"}</button> 
               </div>
             </form>
             <hr className="d-lg-none" />
