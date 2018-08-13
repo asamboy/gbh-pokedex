@@ -8,15 +8,16 @@ class TextInput extends PureComponent {
 
   render() {
     return ( 
-      <div className={this.props.divClassName}>
+      <div className={this.props.divClass}>
         <input
-          className={this.props.inputClassName} 
-          // required
+          className={this.props.inputClass} 
           placeholder={this.props.placeHolder}
           name={this.props.inputName}
           type={this.props.inputType}
           onChange={(event) => this.handleChange(event)}
-          value={this.props.value} 
+          value={this.props.value}
+          min={this.props.min}
+          required={this.props.required} 
         />
       </div>
     );

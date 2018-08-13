@@ -3,6 +3,7 @@ import PkmnTable from "./PkmnTable";
 import TextInput from "./TextInput";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
+import Dropdown from "./Dropdown";
 
 class PkmnForm extends PureComponent {
 
@@ -29,8 +30,8 @@ class PkmnForm extends PureComponent {
     this.state = {
       pokemon: {
         name: '',
-        nickname: '',
         type: '',
+        nickname: '',
         location: '',
         photo:'',
         weight:'',
@@ -46,8 +47,8 @@ class PkmnForm extends PureComponent {
   resetPokemon() {
     return {
       name: '',
-      nickname: '',
       type: '',
+      nickname: '',
       location: '',
       photo:'',
       weight:'',
@@ -84,7 +85,7 @@ class PkmnForm extends PureComponent {
     }));
   }
 
-  editPokemon = (pokemon) => {
+  selectPokemon = (pokemon) => {
     confirmAlert({
       title: 'Edit or remove  ' + pokemon.name + '?',
       buttons: [
@@ -127,26 +128,54 @@ class PkmnForm extends PureComponent {
     return newList;
   }
 
-  getInputFields = (key) => {
-    const notText = ['type','description','captured'];
+  getTextInput = (key) => {
     const numeric = ['weight','age'];
-    let type = "text"
+    let type = "text";
+    let required = true;
+    let min;
 
     if (numeric.indexOf(({key}.key)) !== -1) {
       type = "number";
+      min = "0";
     }
+    
+    return <TextInput 
+            divClass="form-group"
+            inputClass="form-control" 
+            placeHolder={key}
+            inputName={key}
+            inputType={type}
+            handlechange={this.handleChange}
+            value={this.state.pokemon[key]}
+            min={min}
+            required={required}
+            key={key}
+          />
+  }
 
-    if (notText.indexOf({key}.key) === -1) {
-      return <TextInput 
-              divClassName="form-group"
-              inputClassName="form-control" 
-              placeHolder={key}
+  getTypeDropdown = (key) => {
+    let required = true;
+    return <Dropdown 
+    
+              divClass="form-group"
+              inputClass="form-control"
               inputName={key}
-              inputType={type}
               handlechange={this.handleChange}
               value={this.state.pokemon[key]}
+              types={PkmnForm.types}
+              required={required}
               key={key}
-            />
+            />;
+  }
+
+  getInputFields = (key) => {
+    const notText = ['type','description','captured'];
+    const keyName = {key}.key;
+
+    if (notText.indexOf(keyName) === -1) {
+      return this.getTextInput(key);
+    } else if (keyName === "type") {
+      return this.getTypeDropdown(key);
     }
   }
 
@@ -162,7 +191,6 @@ class PkmnForm extends PureComponent {
             <hr />
             <form onSubmit={this.handleSubmit}> 
               {inputFields}
-              
               <div className="col-md-12 text-center">
                 <button type="submit" className="btn btn-primary">{this.state.buttonAction}</button> 
               </div>
@@ -172,7 +200,7 @@ class PkmnForm extends PureComponent {
           <div className="col-lg-8">
             <PkmnTable
               pokemons={this.state.pokemons}
-              edit={this.editPokemon}
+              select={this.selectPokemon}
             />
           </div>
         </div>

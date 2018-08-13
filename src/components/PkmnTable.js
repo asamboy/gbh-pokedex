@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react';
 
 class PkmnTable extends PureComponent {
 
-  edit = (pokemon) => {
-    this.props.edit(pokemon);
+  select = (pokemon) => {
+    this.props.select(pokemon);
   }
 
   addPokemon(pokemon) {
     return <tr 
-              onClick={() => this.edit(pokemon)}
+              onClick={() => this.select(pokemon)}
               key={pokemon.name}
             >
               <td>{pokemon.name}</td>
