@@ -1,14 +1,13 @@
-import React, { PureComponent } from "react";
-import PkmnTable from "./PkmnTable";
-import TextInput from "./TextInput";
-import Dropdown from "./Dropdown";
-import Checkbox from "./Checkbox";
-import Button from "./Button";
+import React, { PureComponent } from 'react';
+import PkmnTable from './PkmnTable';
+import TextInput from './TextInput';
+import Dropdown from './Dropdown';
+import Checkbox from './Checkbox';
+import Button from './Button';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 class PkmnForm extends PureComponent {
-
   static types = [
     'Bug',
     'Dragon',
@@ -24,7 +23,7 @@ class PkmnForm extends PureComponent {
     'Poison',
     'Psychic',
     'Rock',
-    'Water'
+    'Water',
   ]
 
   constructor(props) {
@@ -35,13 +34,13 @@ class PkmnForm extends PureComponent {
         type: '',
         nickname: '',
         location: '',
-        photo:'',
-        weight:'',
-        age:'',
+        photo: '',
+        weight: '',
+        age: '',
         captured: false,
       },
       pokemons: [],
-      buttonAction: "add",
+      buttonAction: 'add',
       selectedPokemon: {},
     };
   }
@@ -59,22 +58,162 @@ class PkmnForm extends PureComponent {
     };
   }
 
+  getInputFields = (key) => {
+    const keyName = { key }.key;
+
+    switch (keyName) {
+      case ('type'):
+        return this.getTypeDropdown(key);
+      case ('captured'):
+        return this.getCapturedCheckbox(key);
+      default:
+        return this.getTextInput(key);
+    }
+  }
+
+  getTextInput = (key) => {
+    const numeric = ['weight', 'age'];
+    let type = 'text';
+    const required = true;
+    let min;
+
+    if (numeric.indexOf({ key }.key) !== -1) {
+      type = 'number';
+      min = '0';
+    }
+    return (
+      <TextInput
+        divClass="form-group"
+        inputClass="form-control" 
+        placeHolder={key}
+        inputName={key}
+        inputType={type}
+        handlechange={this.handleChange}
+        value={this.state.pokemon[key]}
+        min={min}
+        required={required}
+        key={key}
+      />
+    );
+  }
+
+  getTypeDropdown = (key) => {
+    const required = true;
+    return (
+      <Dropdown
+        divClass="form-group"
+        inputClass="form-control"
+        inputName={key}
+        handlechange={this.handleChange}
+        value={this.state.pokemon[key]}
+        types={PkmnForm.types}
+        required={required}
+        key={key}
+      />
+    );
+  }
+
+  getCapturedCheckbox = (key) => {
+    return (
+      <Checkbox
+        divClass="form-group text-center"
+        inputClass="form-check-label"
+        inputName={key}
+        handlechange={this.handleChange}
+        value={this.state.pokemon[key]}
+        key={key}
+      />
+    );
+  }
+
+  delete = (pokemon) => {
+    const newList = this.getNewList(pokemon);
+    this.setState({
+      pokemons: newList,
+    });
+  }
+
+  getNewList = (pokemon) => {
+    const pokemons = this.state.pokemons;
+    const index = pokemons.findIndex(p => p.name === pokemon.name);
+    const newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
+    return newList;
+  }
+
+  edit = (pokemon) => {
+    this.setState({
+      pokemon,
+      buttonAction: 'update',
+    });
+  }
+
+  selectPokemon = (pokemon) => {
+    this.setState({
+      selectedPokemon: pokemon,
+    });
+    confirmAlert({
+      title: `Edit or remove ${pokemon.name} ?`,
+      buttons: [
+        {
+          label: 'Edit',
+          onClick: () => this.edit(pokemon),
+        },
+        {
+          label: 'Delete',
+          onClick: () => this.delete(pokemon),
+        },
+      ],
+    });
+  };
+
+  handleChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    const pokemon = {};
+    pokemon[name] = value;
+
+    this.setState(prevState => ({
+      pokemon: {
+        ...prevState.pokemon,
+        [name]: value,
+      },
+    }));
+  }
+
   handleSubmit = (event) => {
-    const action = this.state.buttonAction;
-    
-    if (action === "add") {
+    const action = this.state.buttonAction; 
+    if (action === 'add') {
       this.addPokemon();
-    } else if (action === "update") {
+    } else if (action === 'update') {
       this.updatePokemon();
     }
     event.preventDefault();
+  }
+
+  // TODO fix the possibility of updating a Pokemon with an existing name
+  updatePokemon = () => {
+    const pokemon = this.state.pokemon; 
+    const pokemons = this.state.pokemons.slice(0);
+    const selected = this.state.selectedPokemon;
+    const emptyPokemon = this.resetPokemon();
+    const index = pokemons.findIndex(p => p.name === selected.name);
+    pokemons[index] = pokemon;
+
+    this.setState({
+      pokemons,
+      pokemon: emptyPokemon,
+      selectedPokemon: emptyPokemon,
+      buttonAction: 'add',
+    });
   }
 
   addPokemon = () => { 
     const pokemon = this.state.pokemon; 
     const emptyPokemon = this.resetPokemon();
     const pokemons = this.state.pokemons;
-    let index = pokemons.findIndex(p => p.name === pokemon.name);
+    const index = pokemons.findIndex(p => p.name === pokemon.name);
 
     if (index === -1) { 
       this.setState({
@@ -82,150 +221,13 @@ class PkmnForm extends PureComponent {
         pokemon: emptyPokemon,
       });
     } else {
-      alert(pokemon.name + " is already registered");
+      alert(`${pokemon.name} is already registered`);
     }
-  }
-
-  // TODO fix the possibility of updating a Pokemon with an existing name
-  updatePokemon = () => {
-    const pokemon = this.state.pokemon; 
-    let pokemons = this.state.pokemons.slice(0);
-    const selected = this.state.selectedPokemon;
-    const emptyPokemon = this.resetPokemon();
-    let index = pokemons.findIndex(p => p.name === selected.name);
-    pokemons[index] = pokemon;
-
-    this.setState({
-      pokemons,
-      pokemon: emptyPokemon,
-      selectedPokemon: emptyPokemon,
-      buttonAction: "add",
-    });
-  }
-
-  handleChange = (event) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-
-    let pokemon = {};
-    pokemon[name] = value;
-
-    this.setState(prevState => ({
-      pokemon: {
-        ...prevState.pokemon,
-        [name]: value
-      }
-    }));
-  }
-
-  selectPokemon = (pokemon) => {
-    this.setState({
-      selectedPokemon: pokemon
-    });
-    confirmAlert({
-      title: 'Edit or remove  ' + pokemon.name + '?',
-      buttons: [
-        {
-          label: 'Edit',
-          onClick: () => this.edit(pokemon)
-        },
-        {
-          label: 'Delete',
-          onClick: () => this.delete(pokemon)
-        }
-      ]
-    })
-  };
-
-  edit = (pokemon) => {
-    this.setState({
-      pokemon,
-      buttonAction: "update",
-    });
-  }
-
-  delete = (pokemon) => {
-    let newList = this.getNewList(pokemon);
-    
-    this.setState({
-      pokemons: newList,
-    });
-  }
-
-  getNewList = (pokemon) => {
-    let pokemons = this.state.pokemons
-    let index = pokemons.findIndex(p => p.name === pokemon.name);
-    let newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
-    return newList;
-  }
-
-  getInputFields = (key) => {
-    let keyName = {key}.key;
-
-    switch(keyName) {
-      case ("type"):
-        return this.getTypeDropdown(key);
-      case ("captured"):
-        return this.getCapturedCheckbox(key);
-      default:
-      return this.getTextInput(key);
-    }
-  }
-
-  getTextInput = (key) => {
-    const numeric = ['weight','age'];
-    let type = "text";
-    let required = true;
-    let min;
-
-    if (numeric.indexOf({key}.key) !== -1) {
-      type = "number";
-      min = "0";
-    }
-    
-    return <TextInput 
-            divClass="form-group"
-            inputClass="form-control" 
-            placeHolder={key}
-            inputName={key}
-            inputType={type}
-            handlechange={this.handleChange}
-            value={this.state.pokemon[key]}
-            min={min}
-            required={required}
-            key={key}
-          />;
-  }
-
-  getTypeDropdown = (key) => {
-    let required = true;
-    return <Dropdown 
-              divClass="form-group"
-              inputClass="form-control"
-              inputName={key}
-              handlechange={this.handleChange}
-              value={this.state.pokemon[key]}
-              types={PkmnForm.types}
-              required={required}
-              key={key}
-            />;
-  }
-
-  getCapturedCheckbox = (key) => {
-    return <Checkbox  
-            divClass="form-group text-center"
-            inputClass="form-check-label" 
-            inputName={key}
-            handlechange={this.handleChange}
-            value={this.state.pokemon[key]}
-            key={key}
-          />
   }
 
   render() {
-    const {pokemon} = this.state;
-    let inputFields = Object.keys(pokemon).map((key) => this.getInputFields(key));
+    const { pokemon } = this.state;
+    const inputFields = Object.keys(pokemon).map(key => this.getInputFields(key));
 
     return (
       <div className="container">

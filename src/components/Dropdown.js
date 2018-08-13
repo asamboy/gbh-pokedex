@@ -16,7 +16,7 @@ class Dropdown extends PureComponent {
           value={this.props.value}
           required={this.props.required}
         >
-          <option value='' disabled>Type</option>
+          <option value="" disabled>Type</option>
           {types.map(
             optionValue => (
               <option

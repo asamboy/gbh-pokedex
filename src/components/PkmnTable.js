@@ -8,24 +8,42 @@ class PkmnTable extends PureComponent {
 
   // TODO load fields dinamically
   addPokemon(pokemon) {
-    return <tr 
-              onClick={() => this.select(pokemon)}
-              key={pokemon.name}
-            >
-              <td>{pokemon.name}</td>
-              <td>{pokemon.type}</td>
-              <td>{pokemon.nickname}</td>
-              <td>{pokemon.location}</td>
-              <td>{pokemon.photo}</td>
-              <td>{pokemon.weight}</td>
-              <td>{pokemon.age}</td>
-              <td className="text-center">{pokemon.captured ? '✓' : ''}</td>
-            </tr>
+    return (
+      <tr
+        onClick={() => this.select(pokemon)}
+        key={pokemon.name}
+      >
+        <td>
+          {pokemon.name}
+        </td>
+        <td>
+          {pokemon.type}
+        </td>
+        <td>
+          {pokemon.nickname}
+        </td>
+        <td>
+          {pokemon.location}
+        </td>
+        <td>
+          {pokemon.photo}
+        </td>
+        <td>
+          {pokemon.weight}
+        </td>
+        <td>
+          {pokemon.age}
+        </td>
+        <td className="text-center">
+          {pokemon.captured ? '✓' : ''}
+        </td>
+      </tr>
+    );
   }
 
   render() {
-    let pokemons = this.props.pokemons;
-    let tableItems = pokemons.map(p => this.addPokemon(p));
+    const pokemons = this.props.pokemons;
+    const tableItems = pokemons.map(p => this.addPokemon(p));
     return (
       <table className="table table-striped table-responsive table-hover">
         <thead>
