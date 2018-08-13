@@ -1,9 +1,11 @@
 import React, { PureComponent } from "react";
 import PkmnTable from "./PkmnTable";
 import TextInput from "./TextInput";
+import Dropdown from "./Dropdown";
+import Checkbox from "./Checkbox";
+import Button from "./Button";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'
-import Dropdown from "./Dropdown";
 
 class PkmnForm extends PureComponent {
 
@@ -36,7 +38,6 @@ class PkmnForm extends PureComponent {
         photo:'',
         weight:'',
         age:'',
-        description:'',
         captured: false,
       },
       pokemons: [],
@@ -54,7 +55,6 @@ class PkmnForm extends PureComponent {
       photo:'',
       weight:'',
       age:'',
-      description:'',
       captured: false,
     };
   }
@@ -86,6 +86,7 @@ class PkmnForm extends PureComponent {
     }
   }
 
+  // TODO fix the possibility of updating a Pokemon with an existing name
   updatePokemon = () => {
     const pokemon = this.state.pokemon; 
     let pokemons = this.state.pokemons.slice(0);
@@ -159,13 +160,26 @@ class PkmnForm extends PureComponent {
     return newList;
   }
 
+  getInputFields = (key) => {
+    let keyName = {key}.key;
+
+    switch(keyName) {
+      case ("type"):
+        return this.getTypeDropdown(key);
+      case ("captured"):
+        return this.getCapturedCheckbox(key);
+      default:
+      return this.getTextInput(key);
+    }
+  }
+
   getTextInput = (key) => {
     const numeric = ['weight','age'];
     let type = "text";
     let required = true;
     let min;
 
-    if (numeric.indexOf(({key}.key)) !== -1) {
+    if (numeric.indexOf({key}.key) !== -1) {
       type = "number";
       min = "0";
     }
@@ -181,13 +195,12 @@ class PkmnForm extends PureComponent {
             min={min}
             required={required}
             key={key}
-          />
+          />;
   }
 
   getTypeDropdown = (key) => {
     let required = true;
     return <Dropdown 
-    
               divClass="form-group"
               inputClass="form-control"
               inputName={key}
@@ -199,15 +212,15 @@ class PkmnForm extends PureComponent {
             />;
   }
 
-  getInputFields = (key) => {
-    const notText = ['type','description','captured'];
-    const keyName = {key}.key;
-
-    if (notText.indexOf(keyName) === -1) {
-      return this.getTextInput(key);
-    } else if (keyName === "type") {
-      return this.getTypeDropdown(key);
-    }
+  getCapturedCheckbox = (key) => {
+    return <Checkbox  
+            divClass="form-group text-center"
+            inputClass="form-check-label" 
+            inputName={key}
+            handlechange={this.handleChange}
+            value={this.state.pokemon[key]}
+            key={key}
+          />
   }
 
   render() {
@@ -223,7 +236,11 @@ class PkmnForm extends PureComponent {
             <form onSubmit={this.handleSubmit}> 
               {inputFields}
               <div className="col-md-12 text-center">
-                <button type="submit" className="btn btn-primary">{this.state.buttonAction === 'add' ? "Add Pokémon" : "Update"}</button> 
+                <Button 
+                  type="submit"
+                  btnClass="btn btn-primary"
+                  action={this.state.buttonAction}
+                />
               </div>
             </form>
             <hr className="d-lg-none" />

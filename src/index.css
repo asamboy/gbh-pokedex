@@ -38,7 +38,8 @@ tbody tr:hover {
   border: none;
 }
 
-input:placeholder-shown {
+input:placeholder-shown, 
+label {
   text-transform: capitalize;
 }
 
