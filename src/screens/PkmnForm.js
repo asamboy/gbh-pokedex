@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
-import PkmnTable from './PkmnTable/PkmnTable';
-import TextInput from './TextInput/TextInput';
-import Dropdown from './Dropdown';
-import Checkbox from './Checkbox';
-import Button from './Button';
+import PkmnTable from '../components/PkmnTable/PkmnTable';
+import TextInput from '../components/TextInput/TextInput';
+import Dropdown from '../components/Dropdown/Dropdown';
+import Checkbox from '../components/Checkbox/Checkbox';
+import Button from '../components/Button/Button';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 class PkmnForm extends PureComponent {
