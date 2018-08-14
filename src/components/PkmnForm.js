@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
-import PkmnTable from './PkmnTable';
-import TextInput from './TextInput';
+import { confirmAlert } from 'react-confirm-alert';
+import PkmnTable from './PkmnTable/PkmnTable';
+import TextInput from './TextInput/TextInput';
 import Dropdown from './Dropdown';
 import Checkbox from './Checkbox';
 import Button from './Button';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 class PkmnForm extends PureComponent {
@@ -45,19 +45,6 @@ class PkmnForm extends PureComponent {
     };
   }
 
-  resetPokemon() {
-    return {
-      name: '',
-      type: '',
-      nickname: '',
-      location: '',
-      photo:'',
-      weight:'',
-      age:'',
-      captured: false,
-    };
-  }
-
   getInputFields = (key) => {
     const keyName = { key }.key;
 
@@ -77,18 +64,21 @@ class PkmnForm extends PureComponent {
     const required = true;
     let min;
 
+    // when destructured, the new state doesn't render
+    // const pokemon = this.state;
+
     if (numeric.indexOf({ key }.key) !== -1) {
       type = 'number';
       min = '0';
     }
     return (
       <TextInput
-        divClass="form-group"
-        inputClass="form-control" 
-        placeHolder={key}
-        inputName={key}
-        inputType={type}
-        handlechange={this.handleChange}
+        divClassName="form-group"
+        className="form-control"
+        placeholder={key}
+        name={key}
+        type={type}
+        onChange={this.handleChange}
         value={this.state.pokemon[key]}
         min={min}
         required={required}
@@ -223,6 +213,19 @@ class PkmnForm extends PureComponent {
     } else {
       alert(`${pokemon.name} is already registered`);
     }
+  }
+
+  resetPokemon() {
+    return {
+      name: '',
+      type: '',
+      nickname: '',
+      location: '',
+      photo:'',
+      weight:'',
+      age:'',
+      captured: false,
+    };
   }
 
   render() {

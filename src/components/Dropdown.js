@@ -24,7 +24,7 @@ class Dropdown extends PureComponent {
               >
                 {optionValue}
               </option>
-            )
+            ),
           )}
         </select>
       </div>
