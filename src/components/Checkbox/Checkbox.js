@@ -24,7 +24,7 @@ function Checkbox(props) {
         onChange={event => handleChange(event)}
       />
 
-      <label  id={name} htmlFor={name}>
+      <label id={name} htmlFor={name}>
         {name}
       </label>
     </div>
