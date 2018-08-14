@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import Props from './props';
 
 class PkmnTable extends PureComponent {
-
   static headers = [
     'Name',
     'Type',
@@ -15,23 +14,27 @@ class PkmnTable extends PureComponent {
   ]
 
   getHeaders = (header) => {
-    return (
+    const element = (
       <th key={header}>
         {header}
       </th>
     );
+    return element;
   }
 
-  // TODO generate keys to avoid repeating values
-  getCells(value) {
-    let className;
+  getCells = (value) => {
     if (typeof value === 'boolean') {
-      value = value ? '✓' : '';
-      className = 'text-center';
+      return (
+        <td key={value} className="text-center">
+          {value ? '✓' : ''}
+        </td>
+      );
     }
 
     return (
-      <td key={ value } className = {className} >{ value }</td>
+      <td key={value}>
+        {value}
+      </td>
     );
   }
 

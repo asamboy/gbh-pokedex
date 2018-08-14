@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
-import PkmnTable from '../components/PkmnTable/PkmnTable';
-import TextInput from '../components/TextInput/TextInput';
-import Dropdown from '../components/Dropdown/Dropdown';
-import Checkbox from '../components/Checkbox/Checkbox';
-import Button from '../components/Button/Button';
+import PkmnTable from '../../components/PkmnTable';
+import TextInput from '../../components/TextInput';
+import Dropdown from '../../components/Dropdown';
+import Checkbox from '../../components/Checkbox';
+import Button from '../../components/Button';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 class PkmnForm extends PureComponent {
@@ -25,6 +25,19 @@ class PkmnForm extends PureComponent {
     'Rock',
     'Water',
   ]
+
+  static resetPokemon() {
+    return {
+      name: '',
+      type: '',
+      nickname: '',
+      location: '',
+      photo: '',
+      weight: '',
+      age: '',
+      captured: false,
+    };
+  }
 
   constructor(props) {
     super(props);
@@ -64,9 +77,6 @@ class PkmnForm extends PureComponent {
     const required = true;
     let min;
 
-    // when destructured, the new state doesn't render
-    // const pokemon = this.state;
-
     if (numeric.indexOf({ key }.key) !== -1) {
       type = 'number';
       min = '0';
@@ -91,10 +101,10 @@ class PkmnForm extends PureComponent {
     const required = true;
     return (
       <Dropdown
-        divClass="form-group"
-        inputClass="form-control"
-        inputName={key}
-        handlechange={this.handleChange}
+        divClassName="form-group"
+        className="form-control"
+        name={key}
+        onChange={this.handleChange}
         value={this.state.pokemon[key]}
         types={PkmnForm.types}
         required={required}
@@ -106,21 +116,14 @@ class PkmnForm extends PureComponent {
   getCapturedCheckbox = (key) => {
     return (
       <Checkbox
-        divClass="form-group text-center"
-        inputClass="form-check-label"
-        inputName={key}
-        handlechange={this.handleChange}
+        divClassName="form-group text-center"
+        className="form-check-label"
+        name={key}
+        onChange={this.handleChange}
         value={this.state.pokemon[key]}
         key={key}
       />
     );
-  }
-
-  delete = (pokemon) => {
-    const newList = this.getNewList(pokemon);
-    this.setState({
-      pokemons: newList,
-    });
   }
 
   getNewList = (pokemon) => {
@@ -128,6 +131,13 @@ class PkmnForm extends PureComponent {
     const index = pokemons.findIndex(p => p.name === pokemon.name);
     const newList = pokemons.slice(0, index).concat(pokemons.slice(index+1));
     return newList;
+  }
+
+  delete = (pokemon) => {
+    const newList = this.getNewList(pokemon);
+    this.setState({
+      pokemons: newList,
+    });
   }
 
   edit = (pokemon) => {
@@ -187,7 +197,7 @@ class PkmnForm extends PureComponent {
     const pokemon = this.state.pokemon; 
     const pokemons = this.state.pokemons.slice(0);
     const selected = this.state.selectedPokemon;
-    const emptyPokemon = this.resetPokemon();
+    const emptyPokemon = PkmnForm.resetPokemon();
     const index = pokemons.findIndex(p => p.name === selected.name);
     pokemons[index] = pokemon;
 
@@ -201,11 +211,11 @@ class PkmnForm extends PureComponent {
 
   addPokemon = () => { 
     const pokemon = this.state.pokemon; 
-    const emptyPokemon = this.resetPokemon();
+    const emptyPokemon = PkmnForm.resetPokemon();
     const pokemons = this.state.pokemons;
     const index = pokemons.findIndex(p => p.name === pokemon.name);
 
-    if (index === -1) { 
+    if (index === -1) {
       this.setState({
         pokemons: pokemons.concat(pokemon),
         pokemon: emptyPokemon,
@@ -213,19 +223,6 @@ class PkmnForm extends PureComponent {
     } else {
       alert(`${pokemon.name} is already registered`);
     }
-  }
-
-  resetPokemon() {
-    return {
-      name: '',
-      type: '',
-      nickname: '',
-      location: '',
-      photo:'',
-      weight:'',
-      age:'',
-      captured: false,
-    };
   }
 
   render() {
@@ -241,7 +238,7 @@ class PkmnForm extends PureComponent {
             <form onSubmit={this.handleSubmit}> 
               {inputFields}
               <div className="col-md-12 text-center">
-                <Button 
+                <Button
                   type="submit"
                   btnClass="btn btn-primary"
                   action={this.state.buttonAction}

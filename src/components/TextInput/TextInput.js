@@ -1,37 +1,36 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import Props from './props';
 
-class TextInput extends PureComponent {
-  handleChange = (event) => {
-    const { onChange } = this.props;
-    onChange(event);
-  }
+function TextInput(props) {
+  const {
+    divClassName,
+    className,
+    name,
+    type,
+    value,
+    min,
+    required,
+    onChange,
+  } = props;
 
-  render() {
-    const {
-      divClassName,
-      className,
-      name,
-      type,
-      value,
-      min,
-      required,
-    } = this.props;
-    return (
-      <div className={divClassName}>
-        <input
-          className={className}
-          placeholder={name}
-          name={name}
-          type={type}
-          onChange={event => this.handleChange(event)}
-          value={value}
-          min={min}
-          required={required}
-        />
-      </div>
-    );
-  }
+  const handleChange = (event) => {
+    onChange(event);
+  };
+
+  return (
+    <div className={divClassName}>
+      <input
+        className={className}
+        placeholder={name}
+        name={name}
+        type={type}
+        onChange={event => handleChange(event)}
+        value={value}
+        min={min}
+        required={required}
+      />
+    </div>
+  );
 }
 
 TextInput.propTypes = Props.propTypes;

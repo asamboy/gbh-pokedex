@@ -1,25 +1,36 @@
 import React from 'react';
+import Props from './props';
 
 function Checkbox(props) {
   const handleChange = (event) => {
-    props.handlechange(event);
+    props.onChange(event);
   };
 
+  const {
+    divClassName,
+    className,
+    name,
+    value,
+  } = props;
+
   return (
-    <div className={props.divClass}>	
+    <div className={divClassName}>
       <input
-        id={props.inputName}
-        className={props.inputClass}	
-        name={props.inputName}	
+        id={name}
+        className={className}
+        name={name}
         type="checkbox"
-        checked={props.value}	
+        checked={value}
         onChange={event => handleChange(event)}
       />
-      <label htmlFor={props.inputName}>
-        {props.inputName}
+
+      <label id={name} htmlFor={name}>
+        {name}
       </label>
     </div>
   );
 }
+
+Checkbox.propTypes = Props.propTypes;
 
 export default Checkbox;
